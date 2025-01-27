@@ -1,0 +1,8 @@
+<div class="audio-bars-container">
+  <div
+    *ngFor="let filled of bars; let i = index"
+    class="audio-bar"
+    [class.filled]="filled"
+    [style.background-color]="filled ? getColor(i) : '#ccc'"
+  ></div>
+</div>

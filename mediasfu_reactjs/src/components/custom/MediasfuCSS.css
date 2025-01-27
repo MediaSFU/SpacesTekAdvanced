@@ -1,0 +1,299 @@
+.MediaSFU .modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+  }
+  
+  .MediaSFU .modal-title {
+    font-size: 18px;
+    font-weight: bold;
+    color: black;
+  }
+  
+  .MediaSFU .btn-close {
+    padding: 5px;
+    cursor: pointer;
+  }
+  
+  .MediaSFU .container {
+    display: flex;
+    width: 100%;
+    flex-direction: row;
+    margin-top: 0px;
+  }
+  
+  .MediaSFU .buttonContainer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 8px;
+    border-radius: 5px;
+    margin-right: 4px;
+    font-size: medium;
+    border: none;
+  }
+  
+  .MediaSFU .buttonContainer:hover {
+    cursor: pointer;
+  }
+  
+  .MediaSFU .verticalButton {
+    flex-direction: column;
+  }
+  
+  .MediaSFU .buttonText {
+    font-size: 12px;
+    margin-top: 5px;
+  }
+  
+  .MediaSFU .modal-body {
+    flex: 1;
+  }
+  
+  .MediaSFU .form-group {
+    margin-bottom: 20px;
+  }
+  
+  .MediaSFU .label {
+    font-size: 14px;
+    color: black;
+    margin-bottom: 5px;
+    font-weight: bold;
+    padding-right: 10px;
+  }
+  
+  .MediaSFU .hr {
+    height: 1px;
+    background-color: black;
+    margin-top: 5px;
+    margin-bottom: 5px;
+  }
+  
+  .MediaSFU .sep {
+    height: 1px;
+    background-color: white;
+    margin-top: 0;
+    margin-bottom: 0;
+  }
+  
+  .MediaSFU .modal-footer {
+    margin-top: 10px;
+    display: flex;
+    justify-content: flex-end;
+  }
+  
+  .MediaSFU .btn-apply-settings {
+    padding: 5px;
+    border-radius: 5px;
+    justify-content: center;
+    align-items: center;
+    background-color: black;
+    color: white;
+    font-size: 14px;
+    cursor: pointer;
+  }
+  
+  .MediaSFU .customButtonsContainer {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: left;
+  }
+  
+  .MediaSFU .customButton {
+    width: 100%;
+    margin: 10px 0;
+    padding: 10px;
+    border-radius: 5px;
+    background-color: transparent;
+    align-items: left;
+    justify-content: left;
+    border: none;
+  }
+  
+  .MediaSFU .buttonContent {
+    display: flex;
+    align-items: left;
+    justify-content: left;
+  }
+  
+  .MediaSFU .customButtonIcon {
+    font-size: 20px;
+    color: #000000;
+    margin-right: 4px;
+  }
+  
+  .MediaSFU .customButtonText {
+    color: #000000;
+  }
+  
+  .MediaSFU #whiteboardCanvas {
+    border: 1px solid #000;
+    cursor: crosshair;
+    background-color: white;
+  }
+  
+  .MediaSFU .resize-handle,
+  .MediaSFU .move-handle {
+    width: 8px;
+    height: 8px;
+    background: red;
+    position: absolute;
+  }
+  
+  .MediaSFU .move-handle {
+    background: blue;
+  }
+  
+  .MediaSFU #textInput {
+    display: none;
+    position: absolute;
+    z-index: 10;
+    width: 200px;
+  }
+  
+  .MediaSFU .shape-icon {
+    width: 20px;
+    height: 20px;
+    color: white;
+  }
+  
+  .MediaSFU .toolbar .btn-group button,
+  .MediaSFU .toolbar .dropdown-menu a {
+    font-size: 0.8rem;
+    padding: 5px 10px;
+    margin: 0 2px;
+    border-radius: 4px;
+    transition: background-color 0.2s;
+  }
+  
+  .MediaSFU .toolbar .dropdown-menu a {
+    background-color: transparent;
+    color: rgb(27, 26, 26);
+  }
+  
+  .MediaSFU .toolbar .btn-group button:hover,
+  .MediaSFU .toolbar .dropdown-menu a:hover {
+    background-color: #e3e7eb;
+  }
+  
+  .MediaSFU .toolbar .btn-group button.active {
+    background-color: #454d55;
+  }
+  
+  .MediaSFU .toolbarScreen .btn-group button,
+  .MediaSFU .toolbarScreen .dropdown-menu a {
+    font-size: 0.8rem;
+    padding: 5px 10px;
+    margin: 1px 2px;
+    border-radius: 4px;
+    transition: background-color 0.2s;
+    background-color: transparent;
+    color: "black";
+  }
+  
+  .MediaSFU .toolbarScreen .btn-group button {
+    color: rgb(6, 6, 6);
+    border: none;
+  }
+  
+  .MediaSFU .toolbarScreen .dropdown-menu a {
+    background-color: transparent;
+    color: rgb(27, 26, 26);
+  }
+  
+  .MediaSFU .toolbarScreen .btn-group button.active {
+    background-color: #454d55;
+  }
+  
+  .MediaSFU #toolbar,
+  .MediaSFU #toolbarScreen {
+    transition: display 0.3s ease-in-out;
+  }
+  
+  .MediaSFU #toolbarToggle,
+  .MediaSFU #toolbarToggleScreen {
+    cursor: pointer;
+    border: "2px solid black" !important;
+    font-size: 0.8rem;
+  }
+  
+  .MediaSFU #colorPicker,
+  .MediaSFU #colorPickerScreen {
+    font-size: 0.8rem;
+    padding: 2px 2px;
+    width: 32px;
+    height: 32px;
+  }
+  
+  .MediaSFU #lineTypePicker {
+    font-size: 0.8rem;
+    padding: 2px auto;
+    width: 32px;
+    height: 32px;
+  }
+  
+  .MediaSFU .btnBoard {
+    font-size: 1rem;
+    padding: 2px 2px;
+    width: 40px;
+    height: 40px;
+    margin: 2px;
+  }
+  
+  .MediaSFU #lineTypePickerScreen {
+    font-size: 0.7rem;
+    padding: 2px auto;
+    width: 28px;
+    height: 28px;
+    background-color: rgba(214, 209, 209, 0.4);
+    color: #000;
+    border-radius: 4px;
+  }
+  
+  .MediaSFU .toggle-icon {
+    width: 30px;
+    height: 30px;
+    padding: 0;
+    margin: 0;
+  }
+  
+  .MediaSFU #toggleBackground.active {
+    background-color: #fdfeff;
+  }
+  
+  .MediaSFU .annotateScreenBtn {
+    background-color: #2d2e2f !important;
+    border: 2px solid #000 !important;
+    color: green !important;
+    font-size: 0.75rem;
+  }
+  
+  .MediaSFU .waiting-list {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .MediaSFU .waiting-item {
+    display: flex;
+    flex-direction: row;
+    margin-top: 5px;
+  }
+  
+  .MediaSFU .col7 {
+    flex: 5;
+    justify-content: center;
+  }
+  
+  .MediaSFU .col2 {
+    flex: 2;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .MediaSFU .col1 {
+    flex: 1;
+  }
+  
