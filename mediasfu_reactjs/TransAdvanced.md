@@ -715,7 +715,147 @@ In addition to transforming JSX elements, you can also handle MediaStreams direc
    - **MediaStream Integration**: The `video` prop allows the component to render the participant's video stream directly.
    - **Ref Management**: `videoRef` ensures that the video element correctly references the MediaStream.
 
-4. **Pass MediaStream to `ParticipantCard`**
+4. **Access Video Streams in `SpaceDetails` Component**
+
+
+    #### Option 1: Extract Streams from `allRoomVideos`
+
+    When you use a `MediasfuGeneric` (or your custom `MediasfuGenericAlt`) to generate JSX elements (like `<VideoCard />`), those elements often have props like `videoStream`. We can **flatten** those elements and match them to participants by ID.
+
+    1. **Create/Use** a local reference for the JSX array, e.g., `allRoomVideos.current`.
+    2. **Flatten** the array to find the one that matches your participant’s `id`.
+
+    ```tsx
+    // Inside your SpaceDetails.tsx (or similar) component
+    // We assume you have 'allRoomVideos' as a ref storing JSX elements.
+
+    const allRoomVideos = useRef<JSX.Element[][]>([]);
+    const mainVideo = useRef<JSX.Element[]>([]); // For the 'main grid' if you have any
+
+    useEffect(() => {
+    // Suppose your sourceParameters stores a reference to these "otherGridStreams"
+    if (sourceParameters.current.otherGridStreams !== allRoomVideos.current) {
+        allRoomVideos.current = sourceParameters.current.otherGridStreams;
+    }
+    // Also, if you have a main grid:
+    if (sourceParameters.current.mainGridStream !== mainVideo.current) {
+        mainVideo.current = sourceParameters.current.mainGridStream;
+    }
+    }, [sourceChanged]);
+
+    function getVideoStreamForParticipant(p: ParticipantData): MediaStream | undefined {
+    let videoStream: MediaStream | undefined;
+
+    try {
+        // Flatten the array of arrays
+        const allVideosFlat = allRoomVideos.current.flat();
+
+        // 1) Match by name / ID
+        const matchedVideoElement = allVideosFlat.find(
+        (element: any) =>
+            element.props &&
+            (element.props.name === p.id ||
+            (element.props.participant?.id.includes('youyou') && p.id === currentUser?.id))
+        );
+
+        if (matchedVideoElement) {
+        videoStream = matchedVideoElement.props?.videoStream;
+        }
+
+        // 2) If participant is host and no match found, maybe fallback to mainVideo
+        if (!videoStream && p.role === 'host' && mainVideo.current?.length) {
+        videoStream = mainVideo.current[0].props?.videoStream;
+        }
+    } catch (error) {
+        console.error('Error finding videoStream in allRoomVideos:', error);
+    }
+
+    return videoStream;
+    }
+
+    // Then pass 'videoStream' to <ParticipantCard />
+    <ParticipantCard
+    participant={p}
+    video={getVideoStreamForParticipant(p)}
+    // ...other props
+    />
+    ```
+
+    *Helper Notes*:
+
+    - **JSX Prop Matching**: We look for `.props.name === participant.id` or if it’s your local user, you might detect `'youyou'` in the ID.
+    - **Host Fallback**: If the participant is the “host” and the usual method fails, we may use a special `mainVideo` fallback (for screen share, etc.).
+    - **Minimal Overhead**: This approach uses the existing generated JSX from `MediasfuGeneric`, so you don’t have to re-implement all the stream logic yourself.
+
+    ---
+
+    #### Option 2: Extract Streams from `allVideoStreams`
+
+    Alternatively, you may bypass the JSX elements and directly access the raw array of `Stream` objects stored in `sourceParameters.current.allVideoStreams`. This can be more flexible if you’d like to manually handle stream pagination or advanced logic.
+
+    1. **Track** `allVideoStreams` in a local ref.
+    2. **Match** each participant’s `videoID` to the `producerId` in the `allVideoStreams` array.
+
+    ```tsx
+    // Inside your SpaceDetails.tsx component
+
+    const allRoomVideoStreams = useRef<(Participant | Stream)[]>([]);
+
+    useEffect(() => {
+    // When sourceParameters updates:
+    if (
+        sourceParameters.current.allVideoStreams &&
+        sourceParameters.current.allVideoStreams !== allRoomVideoStreams.current
+    ) {
+        allRoomVideoStreams.current = sourceParameters.current.allVideoStreams;
+    }
+    }, [sourceChanged]);
+
+    function getVideoStreamForParticipant(p: ParticipantData): MediaStream | undefined {
+    let videoStream: MediaStream | undefined;
+
+    try {
+        // 1) Locate the participant by name or ID in the participants array (optional)
+        const refParticipant = sourceParameters.current.participants?.find(
+        (part: Participant) => part.name === p.id
+        );
+
+        // 2) Find the matching stream by producerId
+        const matchedStreamObj = allRoomVideoStreams.current.find(
+        (s: any) => s.producerId === refParticipant?.videoID
+        ) as Stream | undefined;
+
+        if (matchedStreamObj?.stream) {
+        videoStream = matchedStreamObj.stream;
+        }
+
+        // 3) If no match and it's your local user, fallback to localStreamVideo
+        if (!videoStream && p.id === currentUser?.id) {
+        videoStream = sourceParameters.current.localStreamVideo;
+        }
+
+        // 4) If participant is host, check oldAllStreams or other special cases
+        if (!videoStream && p.role === 'host') {
+        // E.g., host might have "oldAllStreams" if they changed cameras, etc.
+        const oldAllStreams = sourceParameters.current.oldAllStreams || [];
+        if (oldAllStreams.length > 0) {
+            videoStream = oldAllStreams[0].stream;
+        }
+        }
+
+        // 5) Virtual background check (optional)
+        if (!videoStream && sourceParameters.current.keepBackground && sourceParameters.current.virtualStream) {
+        videoStream = sourceParameters.current.virtualStream;
+        }
+    } catch (error) {
+        console.error('Error finding videoStream in allVideoStreams:', error);
+    }
+
+    return videoStream;
+    }
+
+
+5. **Pass MediaStream to `ParticipantCard`**
 
    ```tsx
    // src/components/SpaceDetails.tsx
@@ -731,7 +871,7 @@ In addition to transforming JSX elements, you can also handle MediaStreams direc
 
    *Helper Note*: Passing the `videoStream` prop enables the `ParticipantCard` to render the video stream for each participant.
 
-5. **Test Direct MediaStream Rendering**
+6. **Test Direct MediaStream Rendering**
 
    - **Join the Room**: Access `http://localhost:3000/meeting/start` in multiple Chrome (browser) profiles.
    - **Verify Direct Rendering**: Ensure that video streams are displayed within the `ParticipantCard` components.
